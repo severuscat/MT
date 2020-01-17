@@ -1,14 +1,14 @@
-Грамматика:
-S -> var word : array [R] of word
-R -> N..N, R
-R -> N..N
+Грамматика:                         // base task
+S -> var word : array [R] of word;
+R -> N..N R1
+R1 -> eps
+R1 -> , R
 
-нетерминал   что это
-S            описание массива в Pascal
-R            описание диапазонов
-
-    FIRST   FOLLOW
-S    var      $
-R     N       ]
-
-Данная грамматика является LL(1)
+Грамматика:                         // extra
+S -> var word : array A;
+A -> [R] of A1
+A1 -> word
+A1 -> array A
+R -> N..N R1
+R1 -> eps
+R1 -> , R

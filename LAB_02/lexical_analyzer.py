@@ -92,7 +92,6 @@ class LexicalAnalyzer:
             return lexical_an.Token.DOTCOMMA
         if self.get_word():
             return lexical_an.Token.WORD
-        # print(self.inp[self.cur_pos], self.inp[self.cur_pos + 1])
         raise Exception('invalid character')
 
 

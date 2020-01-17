@@ -47,19 +47,46 @@ def S(la):
     tree.add_child(Tree('dots'))
     check_next_token(lexical_an.Token.ARRAY, la)
     tree.add_child(Tree('array'))
+    # check_next_token(lexical_an.Token.LRANGE, la)
+    # tree.add_child(Tree('lbr'))
+    # tree.add_child(R(la))
+    # tree.add_child(Tree('rbr'))
+    # check_next_token(lexical_an.Token.OF, la)
+    # tree.add_child(Tree('of'))
+    # check_next_token(lexical_an.Token.WORD, la)
+    # tree.add_child(Tree('word'))
+    tree.add_child(A(la))
+    check_next_token(lexical_an.Token.DOTCOMMA, la)
+    tree.add_child(Tree('dotcomma'))
+    check_next_token(lexical_an.Token.END, la)
+    tree.add_child(Tree('end'))
+    return tree
+
+
+def A(la):
+    tree = Tree('ARR_OF')
     check_next_token(lexical_an.Token.LRANGE, la)
     tree.add_child(Tree('lbr'))
     tree.add_child(R(la))
     tree.add_child(Tree('rbr'))
     check_next_token(lexical_an.Token.OF, la)
     tree.add_child(Tree('of'))
-    check_next_token(lexical_an.Token.WORD, la)
-    tree.add_child(Tree('word'))
-    check_next_token(lexical_an.Token.DOTCOMMA, la)
-    tree.add_child(Tree('dotcomma'))
-    check_next_token(lexical_an.Token.END, la)
-    tree.add_child(Tree('end'))
+    tree.add_child(A1(la))
     return tree
+
+
+def A1(la):
+    tree = Tree('ARR_OF1')
+    cur_token = la.next_token()
+    if cur_token == lexical_an.Token.ARRAY:
+        tree.add_child(Tree('array'))
+        tree.add_child(A(la))
+        return tree
+    elif cur_token == lexical_an.Token.WORD:
+        tree.add_child(Tree('word'))
+        return tree
+    else:
+        raise Exception("parse error")
 
 
 def R(la):
@@ -70,12 +97,19 @@ def R(la):
     this_node.add_child(Tree('dotsrange'))
     check_next_token(lexical_an.Token.NUM, la)
     this_node.add_child(Tree('num'))
+    this_node.add_child(R1(la))
+    return this_node
+
+
+def R1(la):
+    this_node = Tree('RANGE1')
     cur_token = la.next_token()
     if cur_token == lexical_an.Token.COMMA:
         this_node.add_child(Tree('comma'))
         this_node.add_child(R(la))
         return this_node
     elif cur_token == lexical_an.Token.RRANGE:
+        this_node.add_child(Tree('eps'))
         return this_node
     else:
         raise Exception("parse error")
@@ -87,10 +121,11 @@ def build_tree(array_descr):
     return tree
 
 
+def test(descr):
+    print(descr)
+    print(build_tree(descr).to_string([]))
+
+
 if __name__ == '__main__':
-    t = 'var x: array [1..10, 2..20] of integer;'
-    print(t)
-    print(build_tree(t).to_string([]))
-    t1 = '\nvar x: array [1..10, 2..20,3..30,    \t 4..40] of integer;'
-    print(t1)
-    print(build_tree(t1).to_string([]))
+    test('var x: array [1..10, 2..20] of array [5..500] of integer;')
+    # test('\nvar x: array [1..10, 2..20,3..30,    \t 4..40] of integer;')
