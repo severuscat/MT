@@ -4,14 +4,15 @@ from LAB_03.gen.prefix_notationLexer import prefix_notationLexer
 from LAB_03.gen.prefix_notationParser import prefix_notationParser
 
 
-def main():
-    input = FileStream('yet_another_test')
+def main(name):
+    input = FileStream(name)
     lexer = prefix_notationLexer(input)
     tokens = CommonTokenStream(lexer)
     parser = prefix_notationParser(tokens)
-    parser.w = open('test').readline()
+    parser.w = name+'gen'
     parser.s()
 
 
 if __name__ == '__main__':
-    main()
+    main('test')
+    main('tetst1')

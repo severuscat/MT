@@ -4,37 +4,38 @@ grammar prefix_notation;
 TAB = "    "
 w = "generated"
 
-def repres(self, op, left, right):
+def repres(self, op1, left, right):
+    op = op1.type
     res = "(" + left + " "
-    if op == prefix_notationParser.MUL:
+    if op == self.MUL:
         res += "*"
-    elif op == prefix_notationParser.DIV:
+    elif op == self.DIV:
         res += "/"
-    elif op == prefix_notationParser.ADD:
+    elif op == self.ADD:
         res += "+"
-    elif op == prefix_notationParser.SUB:
+    elif op == self.SUB:
         res += "-"
-    elif op == prefix_notationParser.AND:
+    elif op == self.AND:
         res += "&&"
-    elif op == prefix_notationParser.OR:
+    elif op == self.OR:
         res += "||"
-    elif op == prefix_notationParser.XOR:
+    elif op == self.XOR:
         res += "^"
-    elif op == prefix_notationParser.LT:
+    elif op == self.LT:
         res += ">"
-    elif op == prefix_notationParser.TT:
+    elif op == self.TT:
         res += "<"
-    elif op == prefix_notationParser.EQ:
+    elif op == self.EQ:
         res += "=="
-    elif op == prefix_notationParser.NE:
+    elif op == self.NE:
         res += "!="
-    elif op == prefix_notationParser.LTE:
+    elif op == self.LTE:
         res += ">="
-    elif op == prefix_notationParser.TTE:
+    elif op == self.TTE:
         res += "<="
-    elif op == prefix_notationParser.SR:
+    elif op == self.SR:
         res += ">>"
-    elif op == prefix_notationParser.SL:
+    elif op == self.SL:
         res += "<<"
     res += " " + right + ")"
     return res
@@ -42,11 +43,11 @@ def repres(self, op, left, right):
 
 s : program [2] EOF
 {
-with open(prefix_notationParser.w, mode='w') as f:
+with open(self.w, mode='w') as f:
     f.write("public class Main {\n    public static void main(String[] args){\n" + $program.v + "    }\n}\n")
    }
 | {
-with open(prefix_notationParser.w, mode='w') as f:
+with open(self.w, mode='w') as f:
     f.write("public class Main {\n}\n")
 };
 
@@ -64,10 +65,10 @@ ifstat [int tabs] returns [String v, boolean c] : 'if' ' ' logic ' ' a=operation
 {
 $v = ""
 for i in range($tabs):
-    $v += prefix_notationParser.TAB
+    $v += self.TAB
 $v += "if (" + $logic.v + ") {\n" + $a.v + "\n"
 for i in range($tabs):
-    $v += prefix_notationParser.TAB
+    $v += self.TAB
 $v += "}\n"
 };
 
@@ -81,10 +82,10 @@ $c = True
 {
 $v = ""
 for i in range(tabs):
-    $v += prefix_notationParser.TAB
+    $v += self.TAB
 $v += "{\n" + $b.v
 for i in range(tabs):
-    $v += prefix_notationParser.TAB
+    $v += self.TAB
 $v += "}"
 $c = False
 }
@@ -93,7 +94,7 @@ $c = False
 {
 $v = ""
 for i in range(tabs):
-    $v += prefix_notationParser.TAB
+    $v += self.TAB
 $v += "System.out.println(" + $expr.v + ");"
 $c = True
 }
@@ -111,14 +112,14 @@ assignment [tabs] returns [v]
 {
 $v = ""
 for i in range(tabs):
-    $v += prefix_notationParser.TAB
+    $v += self.TAB
 $v += "boolean " + $ID.text + " = " + $logic.v
 }
            | '=' ' ' ID ' ' mt_expr
 {
 $v = "";
 for i in range(tabs):
-    $v += prefix_notationParser.TAB
+    $v += self.TAB
 
 $v += "int " + $ID.text + " = " + $mt_expr.v
 }
@@ -126,7 +127,7 @@ $v += "int " + $ID.text + " = " + $mt_expr.v
 {
 $v = ""
 for i in range(tabs):
-    $v += prefix_notationParser.TAB
+    $v += self.TAB
 $v += "String " + $ID.text + " = " + $ST.text
 };
 
@@ -147,7 +148,7 @@ $v = $ST.text
 logic returns [String v]
         : op=('&&'|'||'|'^') ' ' a=logic ' ' b=logic
 {
-$v = prefix_notationParser.repres($op.type, $a.v, $b.v)
+$v = self.repres($op, $a.v, $b.v)
 }
         | '!' ' ' a=logic
 {
@@ -155,7 +156,7 @@ $v = "!" + $a.v
 }
         | op=('>'|'<'|'=='|'>='|'<='|'!=') ' ' c=mt_expr ' ' d=mt_expr
 {
-$v = prefix_notationParser.repres($op.type, $c.v, $d.v)
+$v = self.repres($op, $c.v, $d.v)
 }
         | 'true'
 {
@@ -173,7 +174,7 @@ $v = $ID.text
 mt_expr returns [String v]
        : op=('+'|'-'|'*'|'/'|'>>'|'<<') ' ' a=mt_expr ' ' b=mt_expr
 {
-$v = prefix_notationParser.repres($op.type, $a.v, $b.v)
+$v = self.repres($op, $a.v, $b.v)
 }
        | INT
 {
