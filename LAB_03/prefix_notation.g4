@@ -61,7 +61,7 @@ $v = $program.v + "\n" + $operation.v
 }
 ;
 
-ifstat [int tabs] returns [String v, boolean c] : 'if' ' ' logic ' ' a=operation [$tabs + 1]
+ifstat [tabs] returns [v, c] : 'if' ' ' logic ' ' a=operation [$tabs + 1]
 {
 $v = ""
 for i in range($tabs):
@@ -95,7 +95,7 @@ $c = False
 $v = ""
 for i in range(tabs):
     $v += self.TAB
-$v += "System.out.println(" + $expr.v + ");"
+$v += "System.out.println(" + $expr.v + ");;"
 $c = True
 }
 
@@ -113,7 +113,7 @@ assignment [tabs] returns [v]
 $v = ""
 for i in range(tabs):
     $v += self.TAB
-$v += "boolean " + $ID.text + " = " + $logic.v
+$v += "boolean " + $ID.text + " = " + $logic.v + ";"
 }
            | '=' ' ' ID ' ' mt_expr
 {
@@ -121,14 +121,14 @@ $v = "";
 for i in range(tabs):
     $v += self.TAB
 
-$v += "int " + $ID.text + " = " + $mt_expr.v
+$v += "int " + $ID.text + " = " + $mt_expr.v + ";"
 }
            | '=' ' ' ID ' ' ST
 {
 $v = ""
 for i in range(tabs):
     $v += self.TAB
-$v += "String " + $ID.text + " = " + $ST.text
+$v += "String " + $ID.text + " = " + $ST.text + ";"
 };
 
 expr returns [v]

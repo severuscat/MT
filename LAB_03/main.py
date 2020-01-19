@@ -9,10 +9,11 @@ def main(name):
     lexer = prefix_notationLexer(input)
     tokens = CommonTokenStream(lexer)
     parser = prefix_notationParser(tokens)
-    parser.w = name+'gen'
+    parser.w = 'Main.java'
     parser.s()
 
 
 if __name__ == '__main__':
-    main('test')
+    # main('test')
     main('tetst1')
+    # main('tesyt2')
