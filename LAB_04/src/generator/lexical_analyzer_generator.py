@@ -8,33 +8,34 @@ class LexicalAnalyzerGenerator:
 
     def __init__(self, grammar):
         self.grammar = grammar
+        # pathDir = os.path.join(
+        #     "home",
+        #     "severuscat",
+        #     "STUD",
+        #     "MT",
+        #     "LAB_04"
+        # )
         pathDir = os.path.join(
-            "home",
-            "severuscat",
-            "STUD",
-            "MT",
-            "LAB_04"
-        )
-        pathDir = os.path.join(
-            pathDir,
+            # pathDir,
             "gen",
-            grammar.grammarName.toLowerCase()
+            grammar.grammarName.lower()
         )
-        os.makedirs(pathDir)
+        if (not os.path.exists(pathDir)):
+            os.makedirs(pathDir)
         fileName = grammar.grammarName + "LexicalAnalyzer.java"  # TODO: CHANGE IT!!
         enumFileName = grammar.grammarName + "Token.java"
-        with open(os.path.join(pathDir, enumFileName)) as f:
+        with open(os.path.join(pathDir, enumFileName), 'w') as f:
             f.write(self.tokenClassText())
 
-        with open(os.path.join(pathDir, fileName)) as f:
+        with open(os.path.join(pathDir, fileName), 'w') as f:
             f.write(self.fileText())
 
     def tokenClassText(self):
         sb = ''
-        sb += self.printString("package " + self.grammar.grammarName.toLowerCase() + ";", 0)
+        sb += self.printString("package " + self.grammar.grammarName.lower() + ";", 0)
         # tokens
         sb += self.printString("\npublic enum " + self.grammar.grammarName + "Token {", 0)
-        for s in self.grammar.tokenItems.keySet():
+        for s in self.grammar.tokenItems:
             sb += self.printString(s + ",", 1)
 
         sb += self.printString("_END\n}\n", 1)
@@ -43,7 +44,7 @@ class LexicalAnalyzerGenerator:
     def fileText(self):
         sb = ''
         # header
-        sb += self.printString("package " + self.grammar.grammarName.toLowerCase() + ";\n" +
+        sb += self.printString("package " + self.grammar.grammarName.lower() + ";\n" +
                                "import java.util.ArrayList;\n" +
                                "import java.util.List;\n" +
                                "import java.util.regex.Matcher;\n" +

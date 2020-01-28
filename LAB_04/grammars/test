@@ -1,0 +1,29 @@
+grammar FunctionInPascal;
+
+@imp {
+}
+
+@tokens {
+FUNCTION: "function";
+PROCEDURE: "procedure";
+LP: "\\(";
+RP: "\\)";
+COMMA: ",";
+COLON: ":";
+SEMICOLON: ";";
+TYPE: "integer|real|boolean|char|string";
+NAME: "[a-zA-Z][a-zA-Z0-9_]*";
+SPACE: "[ \n\r]+" -> skip;
+EPS: "";
+}
+
+@start = function_rule;
+
+@states {
+function_rule : FUNCTION NAME LP arguments_list RP COLON TYPE SEMICOLON
+               | PROCEDURE NAME LP arguments_list RP SEMICOLON;
+arguments_list : EPS | arguments COLON TYPE arguments_list_add;
+arguments_list_add : EPS | SEMICOLON arguments COLON TYPE arguments_list_add;
+arguments : NAME arguments_add;
+arguments_add : EPS | COMMA NAME arguments_add;
+}

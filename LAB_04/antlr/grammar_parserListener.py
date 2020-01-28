@@ -1,4 +1,4 @@
-# Generated from grammar_parser.g4 by ANTLR 4.7.2
+# Generated from grammar_parser.g4 by ANTLR 4.8
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .grammar_parserParser import grammar_parserParser
@@ -63,12 +63,12 @@ class grammar_parserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by grammar_parserParser#tokens.
-    def enterTokens(self, ctx:grammar_parserParser.TokensContext):
+    # Enter a parse tree produced by grammar_parserParser#tokenss.
+    def enterTokenss(self, ctx:grammar_parserParser.TokenssContext):
         pass
 
-    # Exit a parse tree produced by grammar_parserParser#tokens.
-    def exitTokens(self, ctx:grammar_parserParser.TokensContext):
+    # Exit a parse tree produced by grammar_parserParser#tokenss.
+    def exitTokenss(self, ctx:grammar_parserParser.TokenssContext):
         pass
 
 
@@ -162,3 +162,5 @@ class grammar_parserListener(ParseTreeListener):
         pass
 
 
+
+del grammar_parserParser

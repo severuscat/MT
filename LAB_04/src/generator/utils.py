@@ -23,14 +23,14 @@ class State:
 
     def addRule(self, r):
         self.rules.append(r)
-        if (r.items.size() == 1 and r.items.get(0).equals("EPS")):
+        if len(r.items) == 1 and r.items[0] == "EPS":
             self.hasEpsilon = True
 
     def getFirst(self):
         return self.first
 
     def addToFirst(self, item):
-        if (item.equals("EPS")):
+        if (item == "EPS"):
             self.hasEpsilon = True
         if (item in self.first):
             return False

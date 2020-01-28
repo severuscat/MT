@@ -27,7 +27,7 @@ class Grammar:
         if tokenName in self.tokenItems:
             sys.stderr.write("Duplicate token name.")
             sys.exit(-1)
-        self.tokenItems.update({tokenName, item})
+        self.tokenItems[tokenName] = item
 
     def addSkipToken(self, tokenName, pattern):
         item = utils.TokenItem(tokenName, pattern)
@@ -57,7 +57,7 @@ class Grammar:
             for state in self.states.values():
                 for rule in state.rules:
                     for item in rule.items:
-                        if item.equals("EPS"):
+                        if item == "EPS":
                             if state.addToFirst(item):
                                 changed = True
                         elif item in self.tokenItems:
@@ -65,7 +65,7 @@ class Grammar:
                                 changed = True
                             break
                         elif item in self.states:
-                            st = self.states.get(item)
+                            st = self.states[item]
                             for newItem in st.getFirst():
                                 if state.addToFirst(newItem):
                                     changed = True
@@ -90,8 +90,8 @@ class Grammar:
                 for rule in self.state.rules:
                     cur_gamma_first = set()
                     cur_gamma_first.add("_END")
-                    for i in range(rule.items.size() - 1, 0, -1):
-                        item = rule.items.get(i)
+                    for i in range(len(rule.items) - 1, 0, -1):
+                        item = rule.items[i]
                         if item == "EPS":
                             cur_gamma_first.add("EPS")
                             continue
@@ -100,7 +100,7 @@ class Grammar:
                             cur_gamma_first.add(item)
                             continue
                         if item in self.states:
-                            st = self.states.get(item)
+                            st = self.states[item]
                             for s in cur_gamma_first:
                                 if not s == "EPS":
                                     if st.addToFollow(s):
@@ -130,7 +130,7 @@ class Grammar:
                 first.add(item)
                 break
             elif item in self.states:
-                first.union(self.states.get(item).getFirst())
+                first.union(self.states[item].getFirst())
                 if not ("EPS" in first):
                     break
         return first

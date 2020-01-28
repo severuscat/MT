@@ -1,11 +1,15 @@
-# Generated from grammar_parser.g4 by ANTLR 4.7.2
+# Generated from grammar_parser.g4 by ANTLR 4.8
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
-from typing.io import TextIO
 import sys
+if sys.version_info[1] > 5:
+	from typing import TextIO
+else:
+	from typing.io import TextIO
 
 from LAB_04.src.generator import grammar, utils
+
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\31")
@@ -113,7 +117,7 @@ class grammar_parserParser ( Parser ):
     RULE_imports = 3
     RULE_import_line = 4
     RULE_import_name = 5
-    RULE_tokens = 6
+    RULE_tokenss = 6
     RULE_token_line = 7
     RULE_startState = 8
     RULE_skip_attr = 9
@@ -126,7 +130,7 @@ class grammar_parserParser ( Parser ):
     RULE_code_block = 16
 
     ruleNames =  [ "start", "program", "header", "imports", "import_line", 
-                   "import_name", "tokens", "token_line", "startState", 
+                   "import_name", "tokenss", "token_line", "startState", 
                    "skip_attr", "states", "state_line", "parameters_state", 
                    "returns_state", "rule_line", "parameters_rule", "code_block" ]
 
@@ -157,9 +161,10 @@ class grammar_parserParser ( Parser ):
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.7.2")
+        self.checkVersion("4.8")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
+
 
 
 
@@ -212,6 +217,7 @@ class grammar_parserParser ( Parser ):
             self.exitRule()
         return localctx
 
+
     class ProgramContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, g=None):
@@ -228,8 +234,8 @@ class grammar_parserParser ( Parser ):
             return self.getTypedRuleContext(grammar_parserParser.ImportsContext,0)
 
 
-        def tokens(self):
-            return self.getTypedRuleContext(grammar_parserParser.TokensContext,0)
+        def tokenss(self):
+            return self.getTypedRuleContext(grammar_parserParser.TokenssContext,0)
 
 
         def startState(self):
@@ -265,7 +271,7 @@ class grammar_parserParser ( Parser ):
             self.state = 38
             self.imports(localctx.g)
             self.state = 39
-            self.tokens(localctx.g)
+            self.tokenss(localctx.g)
             self.state = 40
             self.startState(localctx.g)
             self.state = 41
@@ -277,6 +283,7 @@ class grammar_parserParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class HeaderContext(ParserRuleContext):
 
@@ -324,6 +331,7 @@ class grammar_parserParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class ImportsContext(ParserRuleContext):
 
@@ -385,6 +393,7 @@ class grammar_parserParser ( Parser ):
             self.exitRule()
         return localctx
 
+
     class Import_lineContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, g=None):
@@ -432,6 +441,7 @@ class grammar_parserParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class Import_nameContext(ParserRuleContext):
 
@@ -496,7 +506,8 @@ class grammar_parserParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class TokensContext(ParserRuleContext):
+
+    class TokenssContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, g=None):
             super().__init__(parent, invokingState)
@@ -512,23 +523,23 @@ class grammar_parserParser ( Parser ):
 
 
         def getRuleIndex(self):
-            return grammar_parserParser.RULE_tokens
+            return grammar_parserParser.RULE_tokenss
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterTokens" ):
-                listener.enterTokens(self)
+            if hasattr( listener, "enterTokenss" ):
+                listener.enterTokenss(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitTokens" ):
-                listener.exitTokens(self)
+            if hasattr( listener, "exitTokenss" ):
+                listener.exitTokenss(self)
 
 
 
 
-    def tokens(self, g):
+    def tokenss(self, g):
 
-        localctx = grammar_parserParser.TokensContext(self, self._ctx, self.state, g)
-        self.enterRule(localctx, 12, self.RULE_tokens)
+        localctx = grammar_parserParser.TokenssContext(self, self._ctx, self.state, g)
+        self.enterRule(localctx, 12, self.RULE_tokenss)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
@@ -555,6 +566,7 @@ class grammar_parserParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class Token_lineContext(ParserRuleContext):
 
@@ -632,6 +644,7 @@ class grammar_parserParser ( Parser ):
             self.exitRule()
         return localctx
 
+
     class StartStateContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, g=None):
@@ -683,6 +696,7 @@ class grammar_parserParser ( Parser ):
             self.exitRule()
         return localctx
 
+
     class Skip_attrContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -721,6 +735,7 @@ class grammar_parserParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class StatesContext(ParserRuleContext):
 
@@ -785,6 +800,7 @@ class grammar_parserParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class State_lineContext(ParserRuleContext):
 
@@ -895,6 +911,7 @@ class grammar_parserParser ( Parser ):
             self.exitRule()
         return localctx
 
+
     class Parameters_stateContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, state=None):
@@ -962,6 +979,7 @@ class grammar_parserParser ( Parser ):
             self.exitRule()
         return localctx
 
+
     class Returns_stateContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, state=None):
@@ -1028,6 +1046,7 @@ class grammar_parserParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class Rule_lineContext(ParserRuleContext):
 
@@ -1124,6 +1143,7 @@ class grammar_parserParser ( Parser ):
             self.exitRule()
         return localctx
 
+
     class Parameters_ruleContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, s=None):
@@ -1165,7 +1185,7 @@ class grammar_parserParser ( Parser ):
             self.match(grammar_parserParser.T__14)
             self.state = 180
             localctx.n1 = self.match(grammar_parserParser.NAME)
-            localctx.s.append((None if localctx.n1 is None else localctx.n1.text))
+            localctx.s+=(None if localctx.n1 is None else localctx.n1.text)
             self.state = 187
             self._errHandler.sync(self)
             _la = self._input.LA(1)
@@ -1188,6 +1208,7 @@ class grammar_parserParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class Code_blockContext(ParserRuleContext):
 

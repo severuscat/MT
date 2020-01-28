@@ -10,27 +10,20 @@ class ParserGenerator:
     def __init__(self, grammar):
         self.grammar = grammar
         pathDir = os.path.join(
-            "home",
-            "severuscat",
-            "STUD",
-            "MT",
-            "LAB_04"
-        )
-        pathDir = os.path.join(
-            pathDir,
             "gen",
-            grammar.grammarName.toLowerCase()
+            grammar.grammarName.lower()
         )
-        os.makedirs(pathDir)
+        if (not os.path.exists(pathDir)):
+            os.makedirs(pathDir)
         fileName = grammar.grammarName + "Parser.java"
 
-        with open(os.path.join(pathDir, fileName)) as f:
-            f.write(self.fileText().toString())
+        with open(os.path.join(pathDir, fileName), 'w') as f:
+            f.write(self.fileText())
 
     def fileText(self):
         sb = ''
         # header
-        sb += self.printString("package " + self.grammar.grammarName.toLowerCase() + ";\n" +
+        sb += self.printString("package " + self.grammar.grammarName.lower() + ";\n" +
                                "\n" +
                                "import java.util.ArrayList;\n" +
                                "import java.util.List;", 0)
@@ -89,7 +82,7 @@ class ParserGenerator:
 
         sb += self.printString("private " + self.grammar.grammarName + "LexicalAnalyzer lexicalAnalyzer;", 1)
 
-        sb.append("\n")
+        sb += "\n"
 
         # constructor
         sb += self.printString(
@@ -115,7 +108,7 @@ class ParserGenerator:
                                "\t\tSystem.out.println(tree.treeToString(new ArrayList<>()));\n" +
                                "\t}", 0)
 
-        sb.append += "\n"
+        sb += "\n"
 
         for returnStr in self.grammar.states[self.grammar.startState].getReturns():
             arg = returnStr.split(" ")
@@ -175,10 +168,10 @@ class ParserGenerator:
 
     def printParameters(self, parameters):
         sb = ''
-        for i in range(parameters.size()):
+        for i in range(len(parameters)):
             if (i != 0):
                 sb += ", "
-            sb += parameters.get(i)
+            sb += parameters[i]
         return sb
 
     def printFollowCase(self, s, action):
@@ -202,20 +195,21 @@ class ParserGenerator:
                 sb += self.printString("case " + token + " :", 3)
             else:
                 containsEps = True
-                sb += self.printFollowCase(s, rule.actions.get(0))
-        if (len(sb) == 0 or containsEps):
+                sb += self.printFollowCase(s, rule.actions[0])
+        if len(sb) == 0 or containsEps:
             return sb
 
         sb += self.printString("{", 3)
 
         index = 0
+        # sys.stdout.write(str(rule.parameters) + str(rule.actions) + str(rule.items) + '\n')
         for i in range(len(rule.items)):
             item = rule.items[i]
-            if (item in self.grammar.tokenItems):
+            if item in self.grammar.tokenItems:
                 sb += self.printString(
                     "consume(" + self.grammar.grammarName + "Token." + item + ");", 4)
                 sb += self.printString("res.addChild(new Node(\"" + item + "\"));", 4)
-                sb += self.printString(rule.actions.get(i), 4)
+                sb += self.printString(rule.actions[i], 4)
                 sb += self.printString("lexicalAnalyzer.getNextToken();", 4)
             elif item in self.grammar.states:
                 sb += self.printString(
@@ -224,7 +218,7 @@ class ParserGenerator:
                     "(" + rule.parameters[i] + ");", 4
                 )
                 sb += self.printString("res.addChild(n" + str(index) + ");", 4)
-                sb += self.printString(rule.actions.get(i), 4)
+                sb += self.printString(rule.actions[i], 4)
                 index += 1
             else:
                 sys.stderr.write("Not in token & states. " + item)
@@ -234,9 +228,9 @@ class ParserGenerator:
         return sb
 
     def printString(self, text, tabs):
-        stringBuilder = ''
+        s = ''
         for i in range(tabs):
-            stringBuilder += "\t"
-        stringBuilder += text
-        stringBuilder += "\n"
-        return stringBuilder
+            s += "\t"
+        s += text
+        s += "\n"
+        return s

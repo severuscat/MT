@@ -7,7 +7,7 @@ start returns [g]
 $g = grammar.Grammar()
 }: program[$g] EOF;
 
-program[g]: header[$g] imports[$g] tokens[$g] startState[$g] states[$g];
+program[g]: header[$g] imports[$g] tokenss[$g] startState[$g] states[$g];
 
 header[g]: 'grammar' NAME ';' {$g.setName($NAME.text)};
 
@@ -20,7 +20,7 @@ import_name returns[name]
 $name = ""
 }: n1=NAME {$name += $n1.text} ('.' n2=NAME {$name += '.' + $n2.text})*;
 
-tokens[g]: '@tokens' '{' token_line[$g]* '}';
+tokenss[g]: '@tokens' '{' token_line[$g]* '}';
 
 token_line[g] locals [hasSkip]
 @init {
@@ -63,7 +63,7 @@ $code = ""
 $parameters = ""
 $code = ""})+;
 
-parameters_rule[s] : '[' n1=NAME {$s.append($n1.text)} (',' n2=NAME {$s += ", " + $n2.text})* ']';
+parameters_rule[s] : '[' n1=NAME {$s+=$n1.text} (',' n2=NAME {$s += ", " + $n2.text})* ']';
 
 code_block[s] : CODE_TEXT {
 $s += $CODE_TEXT.text

@@ -21,5 +21,6 @@ def main(name):
 
 
 if __name__ == "__main__":
-    filename = input()
-    main(filename)
+    # filename = input()
+    main('../../grammars/test')
+    # main('../../grammars/calc')
