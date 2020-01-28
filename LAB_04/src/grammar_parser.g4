@@ -1,81 +1,74 @@
-grammar GrammarForGenerate;
+grammar grammar_parser;
 
-@header {
-import generator.Grammar;
-import generator.subclasses.*;
-}
+@header {from LAB_04.src.generator import grammar, utils}
 
-start returns [Grammar g]
+start returns [g]
 @init {
-    $g = new Grammar();
+$g = grammar.Grammar()
 }: program[$g] EOF;
 
-program[Grammar g]: header[$g] imports[$g] tokens[$g] startState[$g] states[$g];
+program[g]: header[$g] imports[$g] tokens[$g] startState[$g] states[$g];
 
-header[Grammar g]: 'grammar' NAME ';' {
-    $g.setName($NAME.text);
+header[g]: 'grammar' NAME ';' {$g.setName($NAME.text)};
+
+imports[g]: '@imp' '{' import_line[$g]* '}';
+
+import_line[g]: ('import' import_name {$g.addImport($import_name.name)} ';');
+
+import_name returns[name]
+@init {
+$name = ""
+}: n1=NAME {$name += $n1.text} ('.' n2=NAME {$name += '.' + $n2.text})*;
+
+tokens[g]: '@tokens' '{' token_line[$g]* '}';
+
+token_line[g] locals [hasSkip]
+@init {
+$hasSkip = False
+}: NAME ':' REGEX (skip_attr {$hasSkip = True})? ';' {
+if ($hasSkip):
+    $g.addSkipToken($NAME.text, $REGEX.text)
+else:
+    $g.addToken($NAME.text, $REGEX.text)
 };
 
-imports[Grammar g]: '@imp' '{' import_line[$g]* '}';
-
-import_line[Grammar g]: ('import' import_name {$g.addImport($import_name.name.toString());} ';');
-
-import_name returns[StringBuilder name]
-@init {
-$name = new StringBuilder();
-}: n1=NAME {$name.append($n1.text);} ('.' n2=NAME {$name.append('.').append($n2.text);})*;
-
-tokens[Grammar g]: '@tokens' '{' token_line[$g]* '}';
-
-token_line[Grammar g] locals [boolean hasSkip]
-@init {
-    $hasSkip = false;
-}: NAME ':' REGEX (skip_attr {$hasSkip = true;})? ';' {
-    if ($hasSkip) {
-        $g.addSkipToken($NAME.text, $REGEX.text);
-    } else {
-        $g.addToken($NAME.text, $REGEX.text);
-    }
-};
-
-startState[Grammar g]: '@start' '=' NAME ';' {
-    $g.setStartState($NAME.text);
+startState[g]: '@start' '=' NAME ';' {
+$g.setStartState($NAME.text)
 };
 
 skip_attr : '->' 'skip';
 
-states[Grammar g]: '@states' '{' (state_line {$g.addState($state_line.state);})+ '}';
+states[g]: '@states' '{' (state_line {$g.addState($state_line.state)}) + '}';
 
-state_line returns [State state]
+state_line returns [state]
 @init {
-    $state = new State();
-}: NAME {$state.setName($NAME.text);}
+$state = utils.State()
+}: NAME {$state.setName($NAME.text)}
 ('[' parameters_state[$state] ']')? ('returns' '[' returns_state[$state] ']')?
-':' r1=rule_line {$state.addRule($r1.r);} ('|' r2=rule_line {$state.addRule($r2.r);})* ';';
+':' r1=rule_line {$state.addRule($r1.r)} ('|' r2=rule_line {$state.addRule($r2.r)})* ';';
 
-parameters_state[State state] : type1=NAME name1=NAME {$state.addParameter($type1.text, $name1.text);}
-                               (',' type2=NAME name2=NAME {$state.addParameter($type2.text, $name2.text);})*;
+parameters_state[state] : type1=NAME name1=NAME {$state.addParameter($type1.text, $name1.text)}
+                               (',' type2=NAME name2=NAME {$state.addParameter($type2.text, $name2.text)})*;
 
-returns_state[State state] : type1=NAME name1=NAME {$state.addReturn($type1.text, $name1.text);}
-                               (',' type2=NAME name2=NAME {$state.addReturn($type2.text, $name2.text);})*;
+returns_state[state] : type1=NAME name1=NAME {$state.addReturn($type1.text, $name1.text)}
+                               (',' type2=NAME name2=NAME {$state.addReturn($type2.text, $name2.text)})*;
 
-rule_line returns [Rule r] locals [StringBuilder parameters, StringBuilder code]
+rule_line returns [r] locals [parameters, code]
 @init {
-    $r = new Rule();
-    $parameters = new StringBuilder();
-    $code = new StringBuilder();
+$r = utils.Rule()
+$parameters = ""
+$code = ""
 }: (NAME (parameters_rule[$parameters])? (code_block[$code])?
-    {$r.addItem($NAME.text, $parameters.toString(), $code.toString());
-    $parameters = new StringBuilder();
-    $code = new StringBuilder();})+;
+{$r.addItem($NAME.text, $parameters, $code)
+$parameters = ""
+$code = ""})+;
 
-parameters_rule[StringBuilder s] : '[' n1=NAME {$s.append($n1.text);} (',' n2=NAME {$s.append(", ").append($n2.text);})* ']';
+parameters_rule[s] : '[' n1=NAME {$s.append($n1.text)} (',' n2=NAME {$s += ", " + $n2.text})* ']';
 
-code_block[StringBuilder s] : CODE_TEXT {
-        $s.append($CODE_TEXT.text);
-        $s.deleteCharAt(0);
-        $s.deleteCharAt($s.length() - 1);
-    };
+code_block[s] : CODE_TEXT {
+$s += $CODE_TEXT.text
+$s = s[1:-1]
+};
 
 WS: [ \t\n]+ -> skip;
 NAME : [a-zA-Z][a-zA-Z0-9_]*;

@@ -15,7 +15,11 @@ class LexicalAnalyzerGenerator:
             "MT",
             "LAB_04"
         )
-        pathDir = pathDir.resolve("gen").resolve(grammar.grammarName.toLowerCase())
+        pathDir = os.path.join(
+            pathDir,
+            "gen",
+            grammar.grammarName.toLowerCase()
+        )
         os.makedirs(pathDir)
         fileName = grammar.grammarName + "LexicalAnalyzer.java"  # TODO: CHANGE IT!!
         enumFileName = grammar.grammarName + "Token.java"

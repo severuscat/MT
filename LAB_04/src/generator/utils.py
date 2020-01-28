@@ -1,10 +1,10 @@
 class State:
     name = ''
-    parameters = [] # list of str
-    returns = [] # list of str
-    rules = [] # list of rules
-    first = set() # set of str
-    follow = set() # set of str
+    parameters = []  # list of str
+    returns = []  # list of str
+    rules = []  # list of rules
+    first = set()  # set of str
+    follow = set()  # set of str
     hasEpsilon = False
 
     def getName(self):
@@ -17,7 +17,6 @@ class State:
         res = type + " " + name
         self.parameters.append(res)
 
-
     def addReturn(self, type, name):
         res = type + " " + name
         self.returns.append(res)
@@ -26,7 +25,6 @@ class State:
         self.rules.append(r)
         if (r.items.size() == 1 and r.items.get(0).equals("EPS")):
             self.hasEpsilon = True
-
 
     def getFirst(self):
         return self.first
@@ -49,8 +47,9 @@ class State:
     def getParameters(self):
         return self.parameters
 
-    def getReturns(self)
+    def getReturns(self):
         return self.returns
+
 
 class Rule:
     items = []
@@ -66,6 +65,7 @@ class Rule:
 class TokenItem:
     name = ''
     pattern = ''
+
     def __init__(self, name, pattern):
         self.name = name
         self.pattern = pattern
