@@ -1,0 +1,38 @@
+grammar Calculator;
+
+@imp {}
+
+@tokens {
+LP: "[(]";
+RP: "[)]";
+PLUS: "\\+" ;
+MINUS:  "-" ;
+MUL: "\\*";
+NUMBER: "[1-9]+[0-9]*|0";
+SPACE: "[ \n\r]+" -> skip;
+}
+
+@start = E;
+
+@states {
+E returns [v]
+    : T #u = n0.v;# G [u] #res.v = n1.v;#;
+G [a] returns [v]
+    : EPS #res.v = a;#
+    | PLUS T #u = n0.v;# PlusOp[a, u] #acc = n1.v;# G[acc] #res.v = n2.v;#
+    | MINUS T #u = n0.v;# MinusOp[a, u] #acc = n1.v;# G[acc] #res.v = n2.v;#;
+T returns [v]
+    : F #u = n0.v;# H[u] #res.v = n1.v;#;
+H [a] returns [v]
+    : EPS #res.v = a;#
+    | MUL F #u = n0.v;# MulOp[a, u] #acc = n1.v;# H[acc] #res.v = n2.v;#;
+F returns [v]
+    : NUMBER #res.v = int(lexicalAnalyzer.get_current_token_string());#
+    | MINUS F #res.v = -(n0.v);#
+    | LP E #res.v = n0.v;# RP;
+
+PlusOp[a, b] returns [v] : EPS #res.v = a + b;#;
+MinusOp[a, b] returns [v] : EPS #res.v = a - b;#;
+MulOp[a, b] returns [v] : EPS #res.v = a * b;#;
+
+}
