@@ -19,216 +19,150 @@ class ParserGenerator:
             f.write(self.fileText())
 
     def fileText(self):
-        sb = ''
-        # # header
-        # sb += self.printString("package " + self.grammar.grammar_name.lower() + ";\n" +
-        #                        "\n" +
-        #                        "import java.util.ArrayList;\n" +
-        #                        "import java.util.List;", 0)
-
+        s = 'from LAB_04_final.src.gen.{0}.{1}Token import *\n' \
+            'from LAB_04_final.src.gen.{0} import {1}LexicalAnalyzer\n\n' \
+            ''.format(self.grammar.grammar_name.lower(), self.grammar.grammar_name)
         for imp in self.grammar.imports:
-            sb += self.printString("import " + imp, 0)
+            s += 'import {}\n'.format(imp)
 
-        sb += "\n"
-        # class
-        sb += self.printString("" +
-                               "class " + self.grammar.grammar_name + "Parser:\n" +
-                               "\tpublic Node tree;\n" +
-                               "\tpublic static class Node {\n" +
-                               "\t\tprivate String name;\n" +
-                               "\t\tprivate List<Node> children = new ArrayList<>();\n" +
-                               "\n" +
-                               "\t\tNode(String s) {\n" +
-                               "\t\t\tname = s;\n" +
-                               "\t\t}\n" +
-                               "\n" +
-                               "\t\tpublic void addChild(Node node) {\n" +
-                               "\t\t\tchildren.add(node);\n" +
-                               "\t\t}\n" +
-                               "\n" +
-                               "\t\tpublic String name {\n" +
-                               "\t\t\treturn name;\n" +
-                               "\t\t}\n" +
-                               "\n" +
-                               "\t\tStringBuilder treeToString(ArrayList<Boolean> mask) {\n" +
-                               "\t\t\tStringBuilder sb = new StringBuilder();\n" +
-                               "\t\t\tif (!mask.isEmpty()) {\n" +
-                               "\t\t\t\tsb.append(\"|__\");\n" +
-                               "\t\t\t}\n" +
-                               "\t\t\tsb.append(\"'\").append(name).append(\"'\").append(\"\\n\");\n" +
-                               "\t\t\tfor (int curChild = 0; curChild < children.size(); ++curChild) {\n" +
-                               "\t\t\t\tfor (boolean b : mask) {\n" +
-                               "\t\t\t\t\tif (b) {\n" +
-                               "\t\t\t\t\t\tsb.append(\"|  \");\n" +
-                               "\t\t\t\t\t} else {\n" +
-                               "\t\t\t\t\t\tsb.append(\"   \");\n" +
-                               "\t\t\t\t\t}\n" +
-                               "\t\t\t\t}\n" +
-                               "\t\t\t\tmask.add(curChild != children.size() - 1);\n" +
-                               "\t\t\t\tsb.append(children.get(curChild).treeToString(mask));\n" +
-                               "\t\t\t\tmask.remove(mask.size() - 1);\n" +
-                               "\t\t\t}\n" +
-                               "\t\t\treturn sb;\n" +
-                               "\t\t}\n" +
-                               "\t}", 0)
-
-        sb += "\n"
+        # ===========NODE===========
+        s += 'class Node:\n' \
+             '\tdef __init__(self, name=None):\n' \
+             '\t\tself.name = \'\' if name is None else name\n' \
+             '\t\tself.children = list() # Nodes\n\n' \
+             '\tdef add_child(self, node):\n' \
+             '\t\tself.children.append(node)\n' \
+             '\n' \
+             '\tdef tree_to_string(self, mask=None):\n' \
+             '\t\tmask = list() if mask is None else mask\n' \
+             '\t\ts = \'\'\n' \
+             '\t\tif len(mask) == 0:\n' \
+             '\t\t\ts += \"|__\"\n' \
+             '\t\ts += self.name + \'\\n\'\n' \
+             '\t\tfor cur_child in range(len(self.children)):\n' \
+             '\t\t\tfor b in mask:\n' \
+             '\t\t\t\tif b:\n' \
+             '\t\t\t\t\ts += \"|  \"\n' \
+             '\t\t\t\telse:\n' \
+             '\t\t\t\t\ts += \"   \"\n' \
+             '\t\t\tmask.append(cur_child != len(self.children) - 1)\n' \
+             '\t\t\ts += self.children[cur_child].tree_to_string(mask)\n' \
+             '\t\t\tmask = mask[0:-1]\n' \
+             '\t\treturn s' \
+             '\n\n\n'
+        s += 'def exp():\n' \
+             '\traise Exception("UNEXPECTED TOKEN")\n\n'
 
         for state in self.grammar.states.values():
-            sb += self.printStateNode(state)
-            sb += "\n"
+            s += self.print_state_node(state)
 
-        sb += self.printString("private " + self.grammar.grammar_name + "LexicalAnalyzer lexicalAnalyzer;", 1)
+        # ===========PARSER===========
 
-        sb += "\n"
+        # --------constructor---------
+        s += 'class {}Parser:\n' \
+             '\tdef __init__(self, lexer):\n' \
+             '\t\tself.lexer = lexer\n' \
+             '\t\tself.tree = Node()\n' \
+             '\t\tself.build_tree()\n\n' \
+             ''.format(self.grammar.grammar_name)
+        # ---------build tree---------
+        s += '\tdef build_tree(self):\n' \
+             '\t\tself.tree = self._{0}()\n' \
+             '\t\tif self.lexer.get_current_token() != {1}_Token._END:\n' \
+             '\t\t\traise Exception("_END EXPECTED " + self.lexer.get_current_token() + " FOUND")\n' \
+             '\n' \
+             '\tdef print_tree(self):\n' \
+             '\t\tprint(self.tree.tree_to_string())\n\n' \
+             ''.format(self.grammar.start_state,
+                       self.grammar.grammar_name)
 
-        # constructor
-        sb += self.printString(
-            "\tpublic " + self.grammar.grammar_name + "Parser(" + self.grammar.grammar_name + "LexicalAnalyzer lexicalAnalyzer) throws Exception {\n" +
-            "\t\tthis.lexicalAnalyzer = lexicalAnalyzer;\n" +
-            "\t\tbuildTree();\n" +
-            "\t}", 0)
+        for return_str in self.grammar.states[self.grammar.start_state].returns:
+            s += '\tdef get_{0}(self):\n' \
+                 '\t\treturn self.tree.{0}\n\n'.format(return_str)
 
-        sb += "\n"
+        # ---------consume---------
+        s += '\tdef consume(self, token):\n' \
+             '\t\tif self.lexer.get_current_token() != token:\n' \
+             '\t\t\traise Exception("EXPECTED ANOTHER TOKEN")\n\n'
 
-        sb += self.printString("" +
-                               "\tprivate void buildTree() throws Exception {\n" +
-                               "\t\ttree = _" + self.grammar.start_state + "();\n" +
-                               "\t\tif (lexicalAnalyzer.getCurrentToken() != " + self.grammar.grammar_name + "Token._END) {\n" +
-                               "\t\t\tthrow new Exception(\"Cur token is \" + lexicalAnalyzer.getCurrentToken().toString() + \" but expected END.\");\n" +
-                               "\t\t}\n" +
-                               "\t}", 0)
+        # ---------states---------
 
-        sb += "\n"
+        for st in self.grammar.states.values():
+            s += self.print_state(st)
 
-        sb += self.printString("" +
-                               "\tpublic void printTree() {\n" +
-                               "\t\tSystem.out.println(tree.treeToString(new ArrayList<>()));\n" +
-                               "\t}", 0)
+        return s
 
-        sb += "\n"
+    def print_state_node(self, st):
+        s = 'class Node_{0}(Node):\n' \
+            '\tdef __init__(self):\n' \
+            '\t\tsuper().__init__(\'{0}\')\n' \
+            ''.format(st.name)
+        for rr in st.returns:
+            s += '\t\tself.{} = None\n'.format(rr)
+        return s + '\n'
 
-        for returnStr in self.grammar.states[self.grammar.start_state].returns:
-            arg = returnStr.split(" ")
-            sb += self.printString("public " + " get" + arg[0] + "() {", 1)
-            sb += self.printString("return ((Node_E)tree)." + arg[0] + ";", 2)
-            sb += self.printString("}", 1)
+    def print_state(self, st):
+        s = '\tdef _{0}(self{1}):\n' \
+            '\t\tres = Node_{0}()\n'.format(st.name, self.print_params(st.parametrs))
+        s += '\t\tc_t = self.lexer.get_current_token()\n' \
+             '\t\tif c_t == \'\':\n' \
+             '\t\t\tpass\n'
+        for rule in st.rules:
+            s += self.print_rule(rule, st)
+        s += '\t\telse:\n' \
+             '\t\t\texp()\n' \
+             '\t\treturn res\n\n'
+        return s
 
-        sb += "\n"
+    def print_params(self, params):
+        s = ''
+        for i in range(len(params)):
+            s += ', '
+            s += params[i]
+        return s
 
-        # consume
-        sb += self.printString("" +
-                               "\tprivate void consume(" + self.grammar.grammar_name + "Token token) throws Exception{\n" +
-                               "\t\tif (lexicalAnalyzer.getCurrentToken() != token) {\n" +
-                               "\t\t\tthrow new Exception(\"Expected another token.\");\n" +
-                               "\t\t}\n" +
-                               "\t}", 0)
+    def print_follow_case(self, st, action):
+        s = ''
+        for item in st.follow:
+            s += "\t\telif c_t == {}_Token.{}:\n" \
+                 "".format(self.grammar.grammar_name, item)
+            if item != '_END':
+                s += "\t\t\tpass\n"
+        if len(s) == 0:
+            s += '\t\t\tpass\n'
+            return s
+        s += '\t' * 4 + action
+        s += '\t\t\t\treturn res\n'
+        return s
 
-        sb += "\n"
-
-        # states
-        for s in self.grammar.states.values():
-            sb += self.printState(s)
-            sb += "\n"
-
-        sb += self.printString("}", 0)
-
-        return sb
-
-    def printStateNode(self, s):
-        sb = ''
-        sb += self.printString("public class Node_" + s.name + " extends Node {", 1)
-        sb += self.printString("Node_" + s.name + "() {", 2)
-        sb += self.printString("super(\"" + s.name + "\");", 3)
-        sb += self.printString("}", 2)
-        for str in s.returns:
-            sb += self.printString("public " + str + ";", 2)
-        sb += self.printString("}", 1)
-        return sb
-
-    def printState(self, s):
-        sb = ''
-
-        sb += self.printString("private Node_" + s.name + " _" + s.name + "(" + self.printParameters(
-            s.parametrs) + ") throws Exception {", 1)
-        sb += self.printString("Node_" + s.name + " res = new Node_" + s.name + "();", 2)
-        sb += self.printString("switch (lexicalAnalyzer.getCurrentToken()) {", 2)
-
-        for rule in s.rules:
-            sb += self.printRule(rule, s)
-
-        sb += self.printString("default : ", 3)
-        sb += self.printString("throw new Exception(\"Unexpected token.\");", 4)
-
-        sb += self.printString("}", 2)
-        sb += self.printString("}", 1)
-        return sb
-
-    def printParameters(self, parameters):
-        sb = ''
-        for i in range(len(parameters)):
-            if (i != 0):
-                sb += ", "
-            sb += parameters[i]
-        return sb
-
-    def printFollowCase(self, s, action):
-        sb = ''
-        for item in s.follow:
-            sb += self.printString("case " + item + " :", 3)
-        if (len(sb) == 0):
-            return sb
-        sb += self.printString("{", 3)
-        sb += self.printString(action, 4)
-        sb += self.printString("return res;", 4)
-        sb += self.printString("}", 3)
-        return sb
-
-    def printRule(self, rule, s):
-        sb = ''
+    def print_rule(self, rule, st):
+        s = ''
         first = self.grammar.first_for_rule(rule)
-        containsEps = False
+        has_eps = False
         for token in first:
-            if not (token == "EPS"):
-                sb += self.printString("case " + token + " :", 3)
+            if token != 'EPS':
+                s += '\t\telif c_t == {}_Token.{}:\n' \
+                     ''.format(self.grammar.grammar_name, token)
             else:
-                containsEps = True
-                sb += self.printFollowCase(s, rule.actions[0])
-        if len(sb) == 0 or containsEps:
-            return sb
-
-        sb += self.printString("{", 3)
-
+                has_eps = True
+                s += (self.print_follow_case(st, rule.actions[0]))
+        if s == '' or has_eps:
+            return s
         index = 0
-        # sys.stdout.write(str(rule.parameters) + str(rule.actions) + str(rule.items) + '\n')
         for i in range(len(rule.items)):
             item = rule.items[i]
-            if item in self.grammar.token_items:
-                sb += self.printString(
-                    "consume(" + self.grammar.grammar_name + "Token." + item + ");", 4)
-                sb += self.printString("res.addChild(new Node(\"" + item + "\"));", 4)
-                sb += self.printString(rule.actions[i], 4)
-                sb += self.printString("lexicalAnalyzer.getNextToken();", 4)
-            elif item in self.grammar.states:
-                sb += self.printString(
-                    "Node_" + item + " n" +
-                    str(index) + " = _" + item +
-                    "(" + rule.parametrs[i] + ");", 4
-                )
-                sb += self.printString("res.addChild(n" + str(index) + ");", 4)
-                sb += self.printString(rule.actions[i], 4)
+            if item in self.grammar.token_items.keys():
+                s += '\t\t\tself.consume({0}_Token.{1})\n' \
+                     '\t\t\tres.add_child(Node("{1}"))\n' \
+                     '\t\t\t{2}\n' \
+                     '\t\t\tself.lexer.get_next_token()\n' \
+                     '\n'.format(self.grammar.grammar_name, item, rule.actions[i])
+            elif item in self.grammar.states.keys():
+                s += '\t\t\tn{0} = self._{1}({3})\n' \
+                     '\t\t\tres.add_child(n{0})\n' \
+                     '{2}\n'.format(index, item, rule.actions[index], rule.parametrs[index])
                 index += 1
             else:
-                sys.stderr.write("Not in token & states. " + item)
-                exit(-1)
-        sb += self.printString("return res;", 4)
-        sb += self.printString("}", 3)
-        return sb
-
-    def printString(self, text, tabs):
-        s = ''
-        for i in range(tabs):
-            s += "\t"
-        s += text
-        s += "\n"
+                raise Exception("NOT IN TOKEN OR STATES")
+        s += '\t\t\treturn res\n'
         return s

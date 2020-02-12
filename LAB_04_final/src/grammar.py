@@ -37,11 +37,11 @@ class Grammar:
         while changed:
             changed = False
             for state in self.states.values():
-                print(state.parametrs)
+                # print(state.parametrs)
                 for rule in state.rules:
                     for item in rule.items:
 
-                        print(state.name, item)
+                        # print(state.name, item)
 
                         if item == 'EPS':
                             if state.add_to_first(item):

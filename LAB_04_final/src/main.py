@@ -17,8 +17,8 @@ def main(name):
     grammar.construct_first()
     grammar.construct_follow()
     lexicalAnalyzerGenerator = LexerGenerator(grammar)
-    print([(item+' '+str(lexicalAnalyzerGenerator.grammar.states[item].first)) for item in lexicalAnalyzerGenerator.grammar.states])
-    print([(item+' '+str(lexicalAnalyzerGenerator.grammar.states[item].follow)) for item in lexicalAnalyzerGenerator.grammar.states])
+    # print([(item+' '+str(lexicalAnalyzerGenerator.grammar.states[item].first)) for item in lexicalAnalyzerGenerator.grammar.states])
+    # print([(item+' '+str(lexicalAnalyzerGenerator.grammar.states[item].follow)) for item in lexicalAnalyzerGenerator.grammar.states])
     parserGenerator = ParserGenerator(grammar)
 
 
