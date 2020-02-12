@@ -90,9 +90,9 @@ class Grammar:
                                 for s in state.follow:
                                     if st.add_to_follow(s):
                                         changed = True
-                            if (not st.has_eps):
+                            if not st.has_eps:
                                 cur_gamma_first.clear()
-                            cur_gamma_first.union(st.first)
+                            cur_gamma_first = cur_gamma_first.union(st.first)
                         else:
                             raise Exception("UNKNOWN STATE NAME {}(((".format(state.name))
 
@@ -105,7 +105,7 @@ class Grammar:
                 first.add(item)
                 break
             elif item in self.states.keys():
-                first.union(self.states[item].first)
+                first = first.union(self.states[item].first)
                 if "EPS" not in first:
                     break
         return first

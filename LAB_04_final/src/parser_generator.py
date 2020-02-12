@@ -36,7 +36,7 @@ class ParserGenerator:
              '\tdef tree_to_string(self, mask=None):\n' \
              '\t\tmask = list() if mask is None else mask\n' \
              '\t\ts = \'\'\n' \
-             '\t\tif len(mask) == 0:\n' \
+             '\t\tif len(mask) != 0:\n' \
              '\t\t\ts += \"|__\"\n' \
              '\t\ts += self.name + \'\\n\'\n' \
              '\t\tfor cur_child in range(len(self.children)):\n' \
@@ -45,9 +45,7 @@ class ParserGenerator:
              '\t\t\t\t\ts += \"|  \"\n' \
              '\t\t\t\telse:\n' \
              '\t\t\t\t\ts += \"   \"\n' \
-             '\t\t\tmask.append(cur_child != len(self.children) - 1)\n' \
-             '\t\t\ts += self.children[cur_child].tree_to_string(mask)\n' \
-             '\t\t\tmask = mask[0:-1]\n' \
+             '\t\t\ts += self.children[cur_child].tree_to_string(mask + [cur_child != len(self.children) - 1])\n' \
              '\t\treturn s' \
              '\n\n\n'
         s += 'def exp():\n' \
@@ -69,7 +67,7 @@ class ParserGenerator:
         s += '\tdef build_tree(self):\n' \
              '\t\tself.tree = self._{0}()\n' \
              '\t\tif self.lexer.get_current_token() != {1}_Token._END:\n' \
-             '\t\t\traise Exception("_END EXPECTED " + self.lexer.get_current_token() + " FOUND")\n' \
+             '\t\t\traise Exception("_END EXPECTED, " + self.lexer.get_current_token() + " FOUND")\n' \
              '\n' \
              '\tdef print_tree(self):\n' \
              '\t\tprint(self.tree.tree_to_string())\n\n' \
@@ -123,13 +121,14 @@ class ParserGenerator:
 
     def print_follow_case(self, st, action):
         s = ''
+        f = False
         for item in st.follow:
+            if (f):
+                s += "\t\t\tpass\n"
+            f = True
             s += "\t\telif c_t == {}_Token.{}:\n" \
                  "".format(self.grammar.grammar_name, item)
-            # if item != '_END':
-            s += "\t\t\tpass\n"
         if len(action) == 0:
-            s += '\t\t\tpass\n'
             return s
         s += '\t' * 3 + action + '\n'
         s += '\t\t\treturn res\n'
@@ -141,11 +140,13 @@ class ParserGenerator:
         has_eps = False
         for token in first:
             if token != 'EPS':
+                s += '\t\t\tpass\n'
                 s += '\t\telif c_t == {}_Token.{}:\n' \
                      ''.format(self.grammar.grammar_name, token)
             else:
                 has_eps = True
-                s += (self.print_follow_case(st, rule.actions[0]))
+                m = (self.print_follow_case(st, rule.actions[0]))
+                s += m
         if s == '' or has_eps:
             return s
         index = 0
@@ -158,7 +159,7 @@ class ParserGenerator:
                      '\t\t\tself.lexer.get_next_token()\n' \
                      '\n'.format(self.grammar.grammar_name, item, rule.actions[i])
             elif item in self.grammar.states.keys():
-                print(item, rule.actions, rule.parametrs)
+                # print(item, rule.actions, rule.parametrs)
 
                 s += '\t\t\tn{0} = self._{1}({2})\n' \
                      '\t\t\tres.add_child(n{0})\n' \

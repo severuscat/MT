@@ -27,7 +27,7 @@ H [a] returns [v]
     : EPS #res.v = a#
     | MUL F #u = n0.v# MulOp[a, u] #acc = n1.v# H[acc] #res.v = n2.v#;
 F returns [v]
-    : NUMBER #res.v = int(self.lexer.get_current_token_string())#
+    : NUMBER #res.v = int(self.lexer.get_current_token_str())#
     | MINUS F #res.v = -(n0.v)#
     | LP E #res.v = n0.v# RP;
 
