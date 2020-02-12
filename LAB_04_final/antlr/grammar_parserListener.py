@@ -117,12 +117,12 @@ class grammar_parserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by grammar_parserParser#parameters_state.
-    def enterParameters_state(self, ctx:grammar_parserParser.Parameters_stateContext):
+    # Enter a parse tree produced by grammar_parserParser#parametrs_state.
+    def enterParametrs_state(self, ctx:grammar_parserParser.Parametrs_stateContext):
         pass
 
-    # Exit a parse tree produced by grammar_parserParser#parameters_state.
-    def exitParameters_state(self, ctx:grammar_parserParser.Parameters_stateContext):
+    # Exit a parse tree produced by grammar_parserParser#parametrs_state.
+    def exitParametrs_state(self, ctx:grammar_parserParser.Parametrs_stateContext):
         pass
 
 
@@ -144,12 +144,12 @@ class grammar_parserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by grammar_parserParser#parameters_rule.
-    def enterParameters_rule(self, ctx:grammar_parserParser.Parameters_ruleContext):
+    # Enter a parse tree produced by grammar_parserParser#parametrs_rule.
+    def enterParametrs_rule(self, ctx:grammar_parserParser.Parametrs_ruleContext):
         pass
 
-    # Exit a parse tree produced by grammar_parserParser#parameters_rule.
-    def exitParameters_rule(self, ctx:grammar_parserParser.Parameters_ruleContext):
+    # Exit a parse tree produced by grammar_parserParser#parametrs_rule.
+    def exitParametrs_rule(self, ctx:grammar_parserParser.Parametrs_ruleContext):
         pass
 
 

@@ -105,10 +105,12 @@ class CalculatorParser:
 		c_t = self.lexer.get_current_token()
 		if c_t == '':
 			pass
-		elif c_t == Calculator_Token._END:
 		elif c_t == Calculator_Token.RP:
 			pass
-								return res
+		elif c_t == Calculator_Token._END:
+			pass
+			res.v = a
+			return res
 		elif c_t == Calculator_Token.PLUS:
 			self.consume(Calculator_Token.PLUS)
 			res.add_child(Node("PLUS"))
@@ -117,13 +119,13 @@ class CalculatorParser:
 
 			n0 = self._T()
 			res.add_child(n0)
-
-			n1 = self._PlusOp()
+			u = n0.v
+			n1 = self._PlusOp(a, u)
 			res.add_child(n1)
-
-			n2 = self._G()
+			acc = n1.v
+			n2 = self._G(acc)
 			res.add_child(n2)
-
+			res.v = n2.v
 			return res
 		elif c_t == Calculator_Token.MINUS:
 			self.consume(Calculator_Token.MINUS)
@@ -133,13 +135,13 @@ class CalculatorParser:
 
 			n0 = self._T()
 			res.add_child(n0)
-
-			n1 = self._MinusOp()
+			u = n0.v
+			n1 = self._MinusOp(a, u)
 			res.add_child(n1)
-
-			n2 = self._G()
+			acc = n1.v
+			n2 = self._G(acc)
 			res.add_child(n2)
-
+			res.v = n2.v
 			return res
 		else:
 			exp()
@@ -159,10 +161,12 @@ class CalculatorParser:
 		c_t = self.lexer.get_current_token()
 		if c_t == '':
 			pass
-		elif c_t == Calculator_Token._END:
 		elif c_t == Calculator_Token.RP:
 			pass
-								return res
+		elif c_t == Calculator_Token._END:
+			pass
+			res.v = a
+			return res
 		elif c_t == Calculator_Token.MUL:
 			self.consume(Calculator_Token.MUL)
 			res.add_child(Node("MUL"))
@@ -171,13 +175,13 @@ class CalculatorParser:
 
 			n0 = self._F()
 			res.add_child(n0)
-
-			n1 = self._MulOp()
+			u = n0.v
+			n1 = self._MulOp(a, u)
 			res.add_child(n1)
-
-			n2 = self._H()
+			acc = n1.v
+			n2 = self._H(acc)
 			res.add_child(n2)
-
+			res.v = n2.v
 			return res
 		else:
 			exp()
@@ -191,7 +195,7 @@ class CalculatorParser:
 		elif c_t == Calculator_Token.NUMBER:
 			self.consume(Calculator_Token.NUMBER)
 			res.add_child(Node("NUMBER"))
-			
+			res.v = int(self.lexer.get_current_token_string())
 			self.lexer.get_next_token()
 
 			return res
@@ -203,7 +207,7 @@ class CalculatorParser:
 
 			n0 = self._F()
 			res.add_child(n0)
-
+			res.v = -(n0.v)
 			return res
 		elif c_t == Calculator_Token.LP:
 			self.consume(Calculator_Token.LP)
@@ -213,7 +217,7 @@ class CalculatorParser:
 
 			n0 = self._E()
 			res.add_child(n0)
-
+			res.v = n0.v
 			self.consume(Calculator_Token.RP)
 			res.add_child(Node("RP"))
 			
@@ -229,10 +233,12 @@ class CalculatorParser:
 		c_t = self.lexer.get_current_token()
 		if c_t == '':
 			pass
-		elif c_t == Calculator_Token._END:
 		elif c_t == Calculator_Token.RP:
 			pass
-								return res
+		elif c_t == Calculator_Token._END:
+			pass
+			res.v = a + b
+			return res
 		else:
 			exp()
 		return res
@@ -242,10 +248,12 @@ class CalculatorParser:
 		c_t = self.lexer.get_current_token()
 		if c_t == '':
 			pass
-		elif c_t == Calculator_Token._END:
 		elif c_t == Calculator_Token.RP:
 			pass
-								return res
+		elif c_t == Calculator_Token._END:
+			pass
+			res.v = a - b
+			return res
 		else:
 			exp()
 		return res
@@ -255,10 +263,12 @@ class CalculatorParser:
 		c_t = self.lexer.get_current_token()
 		if c_t == '':
 			pass
-		elif c_t == Calculator_Token._END:
 		elif c_t == Calculator_Token.RP:
 			pass
-								return res
+		elif c_t == Calculator_Token._END:
+			pass
+			res.v = a * b
+			return res
 		else:
 			exp()
 		return res

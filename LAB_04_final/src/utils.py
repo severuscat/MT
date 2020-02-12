@@ -8,6 +8,7 @@ class Rule:
         self.items.append(s)
         self.parametrs.append(param)
         self.actions.append(action)
+        # print("\nADD: ", self.items, self.parametrs, self.actions)
 
 
 class State:
@@ -22,10 +23,12 @@ class State:
 
     def add_rule(self, rule):
         self.rules.append(rule)
+        # print('ADD RULE: .... ', self.name, rule.items, rule.parametrs, rule.actions)
         if len(rule.items) == 1 and rule.items[0] == 'EPS':
             self.has_eps = True
 
     def add_parameter(self, name):
+        # print('ADD PARAM: ....', self.name, name)
         self.parametrs.append(name)
 
     def add_to_first(self, item):

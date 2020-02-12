@@ -126,13 +126,13 @@ class ParserGenerator:
         for item in st.follow:
             s += "\t\telif c_t == {}_Token.{}:\n" \
                  "".format(self.grammar.grammar_name, item)
-            if item != '_END':
-                s += "\t\t\tpass\n"
-        if len(s) == 0:
+            # if item != '_END':
+            s += "\t\t\tpass\n"
+        if len(action) == 0:
             s += '\t\t\tpass\n'
             return s
-        s += '\t' * 4 + action
-        s += '\t\t\t\treturn res\n'
+        s += '\t' * 3 + action + '\n'
+        s += '\t\t\treturn res\n'
         return s
 
     def print_rule(self, rule, st):
@@ -158,9 +158,11 @@ class ParserGenerator:
                      '\t\t\tself.lexer.get_next_token()\n' \
                      '\n'.format(self.grammar.grammar_name, item, rule.actions[i])
             elif item in self.grammar.states.keys():
-                s += '\t\t\tn{0} = self._{1}({3})\n' \
+                print(item, rule.actions, rule.parametrs)
+
+                s += '\t\t\tn{0} = self._{1}({2})\n' \
                      '\t\t\tres.add_child(n{0})\n' \
-                     '{2}\n'.format(index, item, rule.actions[index], rule.parametrs[index])
+                     '\t\t\t{3}\n'.format(index, item, rule.parametrs[i], rule.actions[i])
                 index += 1
             else:
                 raise Exception("NOT IN TOKEN OR STATES")

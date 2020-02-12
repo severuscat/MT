@@ -63,10 +63,10 @@ startState
 skip_attr
 states
 state_line
-parameters_state
+parametrs_state
 returns_state
 rule_line
-parameters_rule
+parametrs_rule
 code_block
 
 

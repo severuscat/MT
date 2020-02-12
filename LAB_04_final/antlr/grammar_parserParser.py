@@ -121,16 +121,16 @@ class grammar_parserParser ( Parser ):
     RULE_skip_attr = 9
     RULE_states = 10
     RULE_state_line = 11
-    RULE_parameters_state = 12
+    RULE_parametrs_state = 12
     RULE_returns_state = 13
     RULE_rule_line = 14
-    RULE_parameters_rule = 15
+    RULE_parametrs_rule = 15
     RULE_code_block = 16
 
     ruleNames =  [ "start", "program", "header", "imports", "import_line", 
                    "import_name", "tokens", "token_line", "startState", 
-                   "skip_attr", "states", "state_line", "parameters_state", 
-                   "returns_state", "rule_line", "parameters_rule", "code_block" ]
+                   "skip_attr", "states", "state_line", "parametrs_state", 
+                   "returns_state", "rule_line", "parametrs_rule", "code_block" ]
 
     EOF = Token.EOF
     T__0=1
@@ -820,8 +820,8 @@ class grammar_parserParser ( Parser ):
                 return self.getTypedRuleContext(grammar_parserParser.Rule_lineContext,i)
 
 
-        def parameters_state(self):
-            return self.getTypedRuleContext(grammar_parserParser.Parameters_stateContext,0)
+        def parametrs_state(self):
+            return self.getTypedRuleContext(grammar_parserParser.Parametrs_stateContext,0)
 
 
         def returns_state(self):
@@ -862,7 +862,7 @@ class grammar_parserParser ( Parser ):
                 self.state = 116
                 self.match(grammar_parserParser.T__14)
                 self.state = 117
-                self.parameters_state(localctx.state)
+                self.parametrs_state(localctx.state)
                 self.state = 118
                 self.match(grammar_parserParser.T__15)
 
@@ -910,7 +910,7 @@ class grammar_parserParser ( Parser ):
         return localctx
 
 
-    class Parameters_stateContext(ParserRuleContext):
+    class Parametrs_stateContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, state=None):
             super().__init__(parent, invokingState)
@@ -927,23 +927,23 @@ class grammar_parserParser ( Parser ):
                 return self.getToken(grammar_parserParser.NAME, i)
 
         def getRuleIndex(self):
-            return grammar_parserParser.RULE_parameters_state
+            return grammar_parserParser.RULE_parametrs_state
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterParameters_state" ):
-                listener.enterParameters_state(self)
+            if hasattr( listener, "enterParametrs_state" ):
+                listener.enterParametrs_state(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitParameters_state" ):
-                listener.exitParameters_state(self)
+            if hasattr( listener, "exitParametrs_state" ):
+                listener.exitParametrs_state(self)
 
 
 
 
-    def parameters_state(self, state):
+    def parametrs_state(self, state):
 
-        localctx = grammar_parserParser.Parameters_stateContext(self, self._ctx, self.state, state)
-        self.enterRule(localctx, 24, self.RULE_parameters_state)
+        localctx = grammar_parserParser.Parametrs_stateContext(self, self._ctx, self.state, state)
+        self.enterRule(localctx, 24, self.RULE_parametrs_state)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
@@ -1040,7 +1040,7 @@ class grammar_parserParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
             self.r = None
-            self.parameters = None
+            self.parametrs = None
             self.code = None
             self._NAME = None # Token
 
@@ -1050,11 +1050,11 @@ class grammar_parserParser ( Parser ):
             else:
                 return self.getToken(grammar_parserParser.NAME, i)
 
-        def parameters_rule(self, i:int=None):
+        def parametrs_rule(self, i:int=None):
             if i is None:
-                return self.getTypedRuleContexts(grammar_parserParser.Parameters_ruleContext)
+                return self.getTypedRuleContexts(grammar_parserParser.Parametrs_ruleContext)
             else:
-                return self.getTypedRuleContext(grammar_parserParser.Parameters_ruleContext,i)
+                return self.getTypedRuleContext(grammar_parserParser.Parametrs_ruleContext,i)
 
 
         def code_block(self, i:int=None):
@@ -1083,9 +1083,9 @@ class grammar_parserParser ( Parser ):
         localctx = grammar_parserParser.Rule_lineContext(self, self._ctx, self.state)
         self.enterRule(localctx, 28, self.RULE_rule_line)
 
+        localctx.parametrs= list()
+        localctx.code = list()
         localctx.r = utils.Rule()
-        localctx.parameters = ""
-        localctx.code = ""
 
         self._la = 0 # Token type
         try:
@@ -1101,7 +1101,7 @@ class grammar_parserParser ( Parser ):
                 _la = self._input.LA(1)
                 if _la==grammar_parserParser.T__14:
                     self.state = 164
-                    self.parameters_rule(localctx.parameters)
+                    self.parametrs_rule(localctx.parametrs)
 
 
                 self.state = 168
@@ -1112,9 +1112,9 @@ class grammar_parserParser ( Parser ):
                     self.code_block(localctx.code)
 
 
-                localctx.r.add_item((None if localctx._NAME is None else localctx._NAME.text), localctx.parameters, localctx.code)
-                localctx.parameters = ""
-                localctx.code = ""
+                localctx.r.add_item((None if localctx._NAME is None else localctx._NAME.text), ''.join(localctx.parametrs), ''.join(localctx.code)[1:-1])
+                localctx.parametrs = list()
+                localctx.code = list()
                 self.state = 173 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -1130,15 +1130,15 @@ class grammar_parserParser ( Parser ):
         return localctx
 
 
-    class Parameters_ruleContext(ParserRuleContext):
+    class Parametrs_ruleContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, s=None):
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, parametrs=None):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.s = None
+            self.parametrs = None
             self.n1 = None # Token
             self.n2 = None # Token
-            self.s = s
+            self.parametrs = parametrs
 
         def NAME(self, i:int=None):
             if i is None:
@@ -1147,23 +1147,23 @@ class grammar_parserParser ( Parser ):
                 return self.getToken(grammar_parserParser.NAME, i)
 
         def getRuleIndex(self):
-            return grammar_parserParser.RULE_parameters_rule
+            return grammar_parserParser.RULE_parametrs_rule
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterParameters_rule" ):
-                listener.enterParameters_rule(self)
+            if hasattr( listener, "enterParametrs_rule" ):
+                listener.enterParametrs_rule(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitParameters_rule" ):
-                listener.exitParameters_rule(self)
+            if hasattr( listener, "exitParametrs_rule" ):
+                listener.exitParametrs_rule(self)
 
 
 
 
-    def parameters_rule(self, s):
+    def parametrs_rule(self, parametrs):
 
-        localctx = grammar_parserParser.Parameters_ruleContext(self, self._ctx, self.state, s)
-        self.enterRule(localctx, 30, self.RULE_parameters_rule)
+        localctx = grammar_parserParser.Parametrs_ruleContext(self, self._ctx, self.state, parametrs)
+        self.enterRule(localctx, 30, self.RULE_parametrs_rule)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
@@ -1171,7 +1171,7 @@ class grammar_parserParser ( Parser ):
             self.match(grammar_parserParser.T__14)
             self.state = 176
             localctx.n1 = self.match(grammar_parserParser.NAME)
-            localctx.s+=(None if localctx.n1 is None else localctx.n1.text)
+            localctx.parametrs.append((None if localctx.n1 is None else localctx.n1.text))
             self.state = 183
             self._errHandler.sync(self)
             _la = self._input.LA(1)
@@ -1180,7 +1180,7 @@ class grammar_parserParser ( Parser ):
                 self.match(grammar_parserParser.T__18)
                 self.state = 179
                 localctx.n2 = self.match(grammar_parserParser.NAME)
-                localctx.s += ", " + (None if localctx.n2 is None else localctx.n2.text)
+                localctx.parametrs.append(", " + (None if localctx.n2 is None else localctx.n2.text))
                 self.state = 185
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -1198,12 +1198,12 @@ class grammar_parserParser ( Parser ):
 
     class Code_blockContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, s=None):
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1, code=None):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.s = None
+            self.code = None
             self._CODE_TEXT = None # Token
-            self.s = s
+            self.code = code
 
         def CODE_TEXT(self):
             return self.getToken(grammar_parserParser.CODE_TEXT, 0)
@@ -1222,17 +1222,16 @@ class grammar_parserParser ( Parser ):
 
 
 
-    def code_block(self, s):
+    def code_block(self, code):
 
-        localctx = grammar_parserParser.Code_blockContext(self, self._ctx, self.state, s)
+        localctx = grammar_parserParser.Code_blockContext(self, self._ctx, self.state, code)
         self.enterRule(localctx, 32, self.RULE_code_block)
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 188
             localctx._CODE_TEXT = self.match(grammar_parserParser.CODE_TEXT)
 
-            localctx.s += (None if localctx._CODE_TEXT is None else localctx._CODE_TEXT.text)
-            localctx.s = s[1:-1]
+            localctx.code.append((None if localctx._CODE_TEXT is None else localctx._CODE_TEXT.text))
 
         except RecognitionException as re:
             localctx.exception = re

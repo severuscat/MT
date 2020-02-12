@@ -44,30 +44,29 @@ state_line returns [state]
 @init {
 $state = utils.State()
 }: NAME {$state.name = $NAME.text}
-('[' parameters_state[$state] ']')? ('returns' '[' returns_state[$state] ']')?
+('[' parametrs_state[$state] ']')? ('returns' '[' returns_state[$state] ']')?
 ':' r1=rule_line {$state.add_rule($r1.r)} ('|' r2=rule_line {$state.add_rule($r2.r)})* ';';
 
-parameters_state[state] : name1=NAME {$state.add_parameter($name1.text)}
+parametrs_state[state] : name1=NAME {$state.add_parameter($name1.text)}
                                (',' name2=NAME {$state.add_parameter($name2.text)})*;
 
 returns_state[state] : name1=NAME {$state.returns.append($name1.text)}
                                (',' name2=NAME {$state.add_return($name2.text)})*;
 
-rule_line returns [r] locals [parameters, code]
+rule_line returns [r] locals [parametrs, code]
 @init {
+$parametrs= list()
+$code = list()
 $r = utils.Rule()
-$parameters = ""
-$code = ""
-}: (NAME (parameters_rule[$parameters])? (code_block[$code])?
-{$r.add_item($NAME.text, $parameters, $code)
-$parameters = ""
-$code = ""})+;
+}: (NAME (parametrs_rule[$parametrs])? (code_block[$code])?
+{$r.add_item($NAME.text, ''.join($parametrs), ''.join($code)[1:-1])
+$parametrs = list()
+$code = list()})+;
 
-parameters_rule[s] : '[' n1=NAME {$s+=$n1.text} (',' n2=NAME {$s += ", " + $n2.text})* ']';
+parametrs_rule[parametrs] : '[' n1=NAME {$parametrs.append($n1.text)} (',' n2=NAME {$parametrs.append(", " + $n2.text)})* ']';
 
-code_block[s] : CODE_TEXT {
-$s += $CODE_TEXT.text
-$s = s[1:-1]
+code_block[code] : CODE_TEXT {
+$code.append($CODE_TEXT.text)
 };
 
 WS: [ \t\n]+ -> skip;
